@@ -32,6 +32,15 @@ const StatusBadge = ({ status, type = "default" }) => {
       };
       return configs[status] || { variant: "default", text: status };
     }
+if (type === "payment") {
+      const configs = {
+        "Pending": { variant: "warning", text: "Pending" },
+        "Completed": { variant: "success", text: "Completed" },
+        "Failed": { variant: "error", text: "Failed" },
+        "Refunded": { variant: "info", text: "Refunded" }
+      };
+      return configs[status] || { variant: "default", text: status };
+    }
 
     return { variant: "default", text: status };
   };

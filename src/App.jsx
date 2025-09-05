@@ -10,6 +10,7 @@ import LeaveRequests from "@/components/pages/LeaveRequests";
 import ResetPassword from "@/components/pages/ResetPassword";
 import PromptPassword from "@/components/pages/PromptPassword";
 import Penalties from "@/components/pages/Penalties";
+import Payments from "@/components/pages/Payments";
 import Signup from "@/components/pages/Signup";
 import Attendance from "@/components/pages/Attendance";
 import Dashboard from "@/components/pages/Dashboard";
@@ -138,8 +139,9 @@ function AppContent() {
             <Route index element={<Dashboard />} />
             <Route path="employees" element={<Employees />} />
             <Route path="attendance" element={<Attendance />} />
-            <Route path="leave-requests" element={<LeaveRequests />} />
+<Route path="leave-requests" element={<LeaveRequests />} />
 <Route path="departments" element={<Departments />} />
+            <Route path="payments" element={<Payments />} />
             <Route path="penalties" element={<Penalties />} />
             <Route path="activities" element={<Activity />} />
           </Route>
