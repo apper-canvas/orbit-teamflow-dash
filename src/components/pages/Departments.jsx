@@ -11,10 +11,6 @@ import Loading from "@/components/ui/Loading";
 import Employees from "@/components/pages/Employees";
 import Avatar from "@/components/atoms/Avatar";
 import Button from "@/components/atoms/Button";
-import employeeMetadata from "@/metadata/tables/employee_c.json";
-import departmentMetadata from "@/metadata/tables/department_c.json";
-import leaveRequestMetadata from "@/metadata/tables/leave_request_c.json";
-import attendanceMetadata from "@/metadata/tables/attendance_c.json";
 
 const Departments = () => {
   const { onMenuClick } = useOutletContext();
