@@ -10,6 +10,7 @@ import FilterDropdown from "@/components/molecules/FilterDropdown";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import PenaltyModal from "@/components/organisms/PenaltyModal";
 import { penaltyService } from "@/services/api/penaltyService";
 import { employeeService } from "@/services/api/employeeService";
 import { format } from "date-fns";
@@ -17,7 +18,7 @@ import { format } from "date-fns";
 const Penalties = () => {
   const { onMenuClick } = useOutletContext();
   
-  const [penalties, setPenalties] = useState([]);
+const [penalties, setPenalties] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [filteredPenalties, setFilteredPenalties] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ const Penalties = () => {
 
   const [statusFilter, setStatusFilter] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
-
+  const [showCreateModal, setShowCreateModal] = useState(false);
   useEffect(() => {
     loadData();
   }, []);
@@ -124,11 +125,20 @@ const Penalties = () => {
   const statusCounts = getStatusCounts();
   const typeCounts = getTypeCounts();
 
-  return (
+return (
     <div className="flex-1 overflow-hidden">
       <Header
         title="Penalties"
         onMenuClick={onMenuClick}
+        actions={
+          <Button
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center space-x-2"
+          >
+            <ApperIcon name="Plus" className="w-4 h-4" />
+            <span>Add Penalty</span>
+          </Button>
+        }
       />
 
       <main className="flex-1 overflow-auto">
@@ -293,6 +303,12 @@ const Penalties = () => {
           </div>
         </div>
       </main>
+<PenaltyModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        employees={employees}
+        onSuccess={loadData}
+      />
     </div>
   );
 };

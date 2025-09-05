@@ -40,6 +40,14 @@ if (type === "payment") {
         "Refunded": { variant: "info", text: "Refunded" }
       };
       return configs[status] || { variant: "default", text: status };
+}
+
+    if (type === "penalty") {
+      const configs = {
+        "Active": { variant: "error", text: "Active" },
+        "Resolved": { variant: "success", text: "Resolved" }
+      };
+      return configs[status] || { variant: "default", text: status };
     }
 
     return { variant: "default", text: status };
