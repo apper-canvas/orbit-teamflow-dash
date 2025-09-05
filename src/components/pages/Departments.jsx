@@ -11,14 +11,16 @@ import Loading from "@/components/ui/Loading";
 import Employees from "@/components/pages/Employees";
 import Avatar from "@/components/atoms/Avatar";
 import Button from "@/components/atoms/Button";
-
+import DepartmentModal from "@/components/organisms/DepartmentModal";
 const Departments = () => {
   const { onMenuClick } = useOutletContext();
   
-  const [departments, setDepartments] = useState([]);
+const [departments, setDepartments] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [createLoading, setCreateLoading] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -40,7 +42,24 @@ const Departments = () => {
       setLoading(false);
     }
   };
-
+const handleCreateDepartment = async (departmentData) => {
+    setCreateLoading(true);
+    try {
+      const result = await departmentService.create(departmentData);
+      if (result) {
+        toast.success("Department created successfully!");
+        setShowCreateModal(false);
+        loadData(); // Refresh the departments list
+      } else {
+        toast.error("Failed to create department");
+      }
+    } catch (error) {
+      console.error("Error creating department:", error);
+      toast.error("An error occurred while creating the department");
+    } finally {
+      setCreateLoading(false);
+    }
+  };
 const getDepartmentEmployees = (departmentName) => {
     return employees.filter(emp => emp.department_c === departmentName);
   };
@@ -79,9 +98,18 @@ stats[dept.name_c] = {
 
   return (
     <div className="flex-1 overflow-hidden">
-      <Header
+<Header
         title="Departments"
         onMenuClick={onMenuClick}
+        actions={
+          <Button 
+            onClick={() => setShowCreateModal(true)}
+            className="flex items-center space-x-2"
+          >
+            <ApperIcon name="Plus" className="w-4 h-4" />
+            <span>Add Department</span>
+          </Button>
+        }
       />
 
       <main className="flex-1 overflow-auto">
@@ -231,8 +259,17 @@ src={employee.photo_url_c}
               icon="Building2"
             />
           )}
-        </div>
+</div>
       </main>
+
+      <DepartmentModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSave={handleCreateDepartment}
+        loading={createLoading}
+        employees={employees}
+        mode="create"
+      />
     </div>
   );
 };
