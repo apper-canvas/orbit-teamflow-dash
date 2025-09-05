@@ -43,6 +43,12 @@ const Sidebar = ({ className, onClose }) => {
       href: "/penalties",
       icon: "AlertTriangle",
       current: location.pathname === "/penalties"
+    },
+    {
+      name: "Activities",
+      href: "/activities",
+      icon: "Activity",
+      current: location.pathname === "/activities"
     }
   ];
 

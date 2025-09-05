@@ -1,23 +1,24 @@
-import React, { createContext, useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import { Provider } from 'react-redux';
-import { useDispatch, useSelector } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import { store } from '@/store/store';
-import { setUser, clearUser } from '@/store/userSlice';
-import Layout from '@/components/organisms/Layout';
-import Dashboard from '@/components/pages/Dashboard';
-import Employees from '@/components/pages/Employees';
-import Attendance from '@/components/pages/Attendance';
-import LeaveRequests from '@/components/pages/LeaveRequests';
-import Departments from '@/components/pages/Departments';
-import Penalties from '@/components/pages/Penalties';
-import Login from '@/components/pages/Login';
-import Signup from '@/components/pages/Signup';
-import Callback from '@/components/pages/Callback';
-import ErrorPage from '@/components/pages/ErrorPage';
-import ResetPassword from '@/components/pages/ResetPassword';
-import PromptPassword from '@/components/pages/PromptPassword';
+import React, { createContext, useEffect, useState } from "react";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
+import { Provider, useDispatch, useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import { store } from "@/store/store";
+import Activity from "@/components/pages/Activity";
+import "@/index.css";
+import Layout from "@/components/organisms/Layout";
+import LeaveRequests from "@/components/pages/LeaveRequests";
+import ResetPassword from "@/components/pages/ResetPassword";
+import PromptPassword from "@/components/pages/PromptPassword";
+import Penalties from "@/components/pages/Penalties";
+import Signup from "@/components/pages/Signup";
+import Attendance from "@/components/pages/Attendance";
+import Dashboard from "@/components/pages/Dashboard";
+import Employees from "@/components/pages/Employees";
+import Departments from "@/components/pages/Departments";
+import ErrorPage from "@/components/pages/ErrorPage";
+import Callback from "@/components/pages/Callback";
+import Login from "@/components/pages/Login";
+import { clearUser, setUser } from "@/store/userSlice";
 
 export const AuthContext = createContext(null);
 
@@ -138,8 +139,9 @@ function AppContent() {
             <Route path="employees" element={<Employees />} />
             <Route path="attendance" element={<Attendance />} />
             <Route path="leave-requests" element={<LeaveRequests />} />
-            <Route path="departments" element={<Departments />} />
+<Route path="departments" element={<Departments />} />
             <Route path="penalties" element={<Penalties />} />
+            <Route path="activities" element={<Activity />} />
           </Route>
         </Routes>
 
@@ -160,7 +162,7 @@ function AppContent() {
     </AuthContext.Provider>
   );
 }
-function App() {
+function MainApp() {
   return (
     <Provider store={store}>
       <BrowserRouter>
@@ -170,4 +172,4 @@ function App() {
   );
 }
 
-export default App;
+export default MainApp;
