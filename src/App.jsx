@@ -11,6 +11,7 @@ import Employees from '@/components/pages/Employees';
 import Attendance from '@/components/pages/Attendance';
 import LeaveRequests from '@/components/pages/LeaveRequests';
 import Departments from '@/components/pages/Departments';
+import Penalties from '@/components/pages/Penalties';
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
 import Callback from '@/components/pages/Callback';
@@ -132,12 +133,13 @@ function AppContent() {
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
           <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-          <Route path="/" element={<Layout />}>
+<Route path="/" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="employees" element={<Employees />} />
             <Route path="attendance" element={<Attendance />} />
             <Route path="leave-requests" element={<LeaveRequests />} />
             <Route path="departments" element={<Departments />} />
+            <Route path="penalties" element={<Penalties />} />
           </Route>
         </Routes>
 
