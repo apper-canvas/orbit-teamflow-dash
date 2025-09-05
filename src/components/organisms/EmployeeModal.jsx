@@ -9,26 +9,22 @@ import { format } from "date-fns";
 
 const EmployeeModal = ({ employee, isOpen, onClose, onSave, mode = "view" }) => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    department: "",
-    role: "",
-    hireDate: "",
-    salary: "",
-    status: "Active",
-    address: {
-      street: "",
-      city: "",
-      state: "",
-      zipCode: ""
-    },
-    emergencyContact: {
-      name: "",
-      relationship: "",
-      phone: ""
-    }
+    first_name_c: "",
+    last_name_c: "",
+    email_c: "",
+    phone_c: "",
+    department_c: "",
+    role_c: "",
+    hire_date_c: "",
+    salary_c: "",
+    status_c: "Active",
+    address_street_c: "",
+    address_city_c: "",
+    address_state_c: "",
+    address_zip_code_c: "",
+    emergency_contact_name_c: "",
+    emergency_contact_relationship_c: "",
+    emergency_contact_phone_c: ""
   });
 
 const [activeTab, setActiveTab] = useState("personal");
@@ -40,54 +36,54 @@ const [activeTab, setActiveTab] = useState("personal");
     return !isNaN(date.getTime());
   };
 
-  useEffect(() => {
+useEffect(() => {
     if (employee) {
       let formattedHireDate = "";
       
       try {
-        if (employee.hireDate && isValidDate(employee.hireDate)) {
-          formattedHireDate = format(new Date(employee.hireDate), "yyyy-MM-dd");
+        if (employee.hire_date_c && isValidDate(employee.hire_date_c)) {
+          formattedHireDate = format(new Date(employee.hire_date_c), "yyyy-MM-dd");
         }
       } catch (error) {
-        console.warn('Invalid hire date format:', employee.hireDate);
+        console.warn('Invalid hire date format:', employee.hire_date_c);
         formattedHireDate = "";
       }
 
       setFormData({
-        ...employee,
-        hireDate: formattedHireDate,
-        address: employee.address || { street: "", city: "", state: "", zipCode: "" },
-        emergencyContact: employee.emergencyContact || { name: "", relationship: "", phone: "" }
+        first_name_c: employee.first_name_c || "",
+        last_name_c: employee.last_name_c || "",
+        email_c: employee.email_c || "",
+        phone_c: employee.phone_c || "",
+        department_c: employee.department_c || "",
+        role_c: employee.role_c || "",
+        hire_date_c: formattedHireDate,
+        salary_c: employee.salary_c || "",
+        status_c: employee.status_c || "Active",
+        address_street_c: employee.address_street_c || "",
+        address_city_c: employee.address_city_c || "",
+        address_state_c: employee.address_state_c || "",
+        address_zip_code_c: employee.address_zip_code_c || "",
+        emergency_contact_name_c: employee.emergency_contact_name_c || "",
+        emergency_contact_relationship_c: employee.emergency_contact_relationship_c || "",
+        emergency_contact_phone_c: employee.emergency_contact_phone_c || ""
       });
     }
   }, [employee]);
 
-  const handleInputChange = (field, value) => {
-    if (field.includes(".")) {
-      const [parent, child] = field.split(".");
-      setFormData(prev => ({
-        ...prev,
-        [parent]: {
-          ...prev[parent],
-          [child]: value
-        }
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [field]: value
-      }));
-    }
+const handleInputChange = (field, value) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
   };
 
 const handleSave = () => {
     let processedHireDate;
     
     try {
-      if (formData.hireDate && isValidDate(formData.hireDate)) {
-        processedHireDate = new Date(formData.hireDate).toISOString();
+      if (formData.hire_date_c && isValidDate(formData.hire_date_c)) {
+        processedHireDate = new Date(formData.hire_date_c).toISOString();
       } else {
-        // For new employees without a hire date, default to current date
         processedHireDate = new Date().toISOString();
         console.warn('No valid hire date provided, using current date');
       }
@@ -98,8 +94,8 @@ const handleSave = () => {
 
     const dataToSave = {
       ...formData,
-      hireDate: processedHireDate,
-      salary: parseFloat(formData.salary) || 0
+      hire_date_c: processedHireDate,
+      salary_c: parseFloat(formData.salary_c) || 0
     };
     
     onSave(dataToSave);
@@ -107,7 +103,7 @@ const handleSave = () => {
 
   if (!isOpen) return null;
 
-  const fullName = employee ? `${employee.firstName} ${employee.lastName}` : "New Employee";
+const fullName = employee ? `${employee.first_name_c} ${employee.last_name_c}` : "New Employee";
 
   const tabs = [
     { id: "personal", label: "Personal Info", icon: "User" },
@@ -130,7 +126,7 @@ const handleSave = () => {
           <div className="flex items-center justify-between px-6 py-4 border-b border-secondary-200">
             <div className="flex items-center space-x-3">
               <Avatar
-                src={employee?.photoUrl}
+src={employee?.photo_url_c}
                 name={fullName}
                 size="lg"
               />
@@ -140,8 +136,8 @@ const handleSave = () => {
                 </h2>
                 {employee && (
                   <div className="flex items-center space-x-2 mt-1">
-                    <span className="text-sm text-secondary-600">{employee.role}</span>
-                    <StatusBadge status={employee.status} type="employee" />
+                    <span className="text-sm text-secondary-600">{employee.role_c}</span>
+                    <StatusBadge status={employee.status_c} type="employee" />
                   </div>
                 )}
               </div>
@@ -180,56 +176,56 @@ const handleSave = () => {
           <div className="px-6 py-6 max-h-[60vh] overflow-y-auto">
             {activeTab === "personal" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField
+<FormField
                   label="First Name"
                   required
-                  value={formData.firstName}
-                  onChange={(e) => handleInputChange("firstName", e.target.value)}
+                  value={formData.first_name_c}
+                  onChange={(e) => handleInputChange("first_name_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Last Name"
                   required
-                  value={formData.lastName}
-                  onChange={(e) => handleInputChange("lastName", e.target.value)}
+                  value={formData.last_name_c}
+                  onChange={(e) => handleInputChange("last_name_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Email"
                   type="email"
                   required
-                  value={formData.email}
-                  onChange={(e) => handleInputChange("email", e.target.value)}
+                  value={formData.email_c}
+                  onChange={(e) => handleInputChange("email_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Phone"
-                  value={formData.phone}
-                  onChange={(e) => handleInputChange("phone", e.target.value)}
+                  value={formData.phone_c}
+                  onChange={(e) => handleInputChange("phone_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Street Address"
-                  value={formData.address.street}
-                  onChange={(e) => handleInputChange("address.street", e.target.value)}
+                  value={formData.address_street_c}
+                  onChange={(e) => handleInputChange("address_street_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="City"
-                  value={formData.address.city}
-                  onChange={(e) => handleInputChange("address.city", e.target.value)}
+                  value={formData.address_city_c}
+                  onChange={(e) => handleInputChange("address_city_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="State"
-                  value={formData.address.state}
-                  onChange={(e) => handleInputChange("address.state", e.target.value)}
+                  value={formData.address_state_c}
+                  onChange={(e) => handleInputChange("address_state_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="ZIP Code"
-                  value={formData.address.zipCode}
-                  onChange={(e) => handleInputChange("address.zipCode", e.target.value)}
+                  value={formData.address_zip_code_c}
+                  onChange={(e) => handleInputChange("address_zip_code_c", e.target.value)}
                   disabled={mode === "view"}
                 />
               </div>
@@ -238,38 +234,38 @@ const handleSave = () => {
             {activeTab === "job" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  label="Department"
+label="Department"
                   required
-                  value={formData.department}
-                  onChange={(e) => handleInputChange("department", e.target.value)}
+                  value={formData.department_c}
+                  onChange={(e) => handleInputChange("department_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Role"
                   required
-                  value={formData.role}
-                  onChange={(e) => handleInputChange("role", e.target.value)}
+                  value={formData.role_c}
+                  onChange={(e) => handleInputChange("role_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Hire Date"
                   type="date"
                   required
-                  value={formData.hireDate}
-                  onChange={(e) => handleInputChange("hireDate", e.target.value)}
+                  value={formData.hire_date_c}
+                  onChange={(e) => handleInputChange("hire_date_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Salary"
                   type="number"
-                  value={formData.salary}
-                  onChange={(e) => handleInputChange("salary", e.target.value)}
+                  value={formData.salary_c}
+                  onChange={(e) => handleInputChange("salary_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField label="Status" className="md:col-span-2">
                   <select
-                    value={formData.status}
-                    onChange={(e) => handleInputChange("status", e.target.value)}
+                    value={formData.status_c}
+                    onChange={(e) => handleInputChange("status_c", e.target.value)}
                     disabled={mode === "view"}
                     className="flex h-10 w-full rounded-md border border-secondary-300 bg-white px-3 py-2 text-sm"
                   >
@@ -285,21 +281,21 @@ const handleSave = () => {
             {activeTab === "contact" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  label="Emergency Contact Name"
-                  value={formData.emergencyContact.name}
-                  onChange={(e) => handleInputChange("emergencyContact.name", e.target.value)}
+label="Emergency Contact Name"
+                  value={formData.emergency_contact_name_c}
+                  onChange={(e) => handleInputChange("emergency_contact_name_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Relationship"
-                  value={formData.emergencyContact.relationship}
-                  onChange={(e) => handleInputChange("emergencyContact.relationship", e.target.value)}
+                  value={formData.emergency_contact_relationship_c}
+                  onChange={(e) => handleInputChange("emergency_contact_relationship_c", e.target.value)}
                   disabled={mode === "view"}
                 />
                 <FormField
                   label="Emergency Contact Phone"
-                  value={formData.emergencyContact.phone}
-                  onChange={(e) => handleInputChange("emergencyContact.phone", e.target.value)}
+                  value={formData.emergency_contact_phone_c}
+                  onChange={(e) => handleInputChange("emergency_contact_phone_c", e.target.value)}
                   disabled={mode === "view"}
                   className="md:col-span-2"
                 />

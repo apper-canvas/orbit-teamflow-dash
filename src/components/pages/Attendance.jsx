@@ -45,23 +45,23 @@ const Attendance = () => {
   };
 
   const getTodayAttendance = () => {
-    return attendance.filter(att => isToday(new Date(att.date)));
+return attendance.filter(att => isToday(new Date(att.date_c)));
   };
 
   const getMonthlyStats = () => {
     const monthStart = startOfMonth(selectedDate);
     const monthEnd = endOfMonth(selectedDate);
-    const monthlyAttendance = attendance.filter(att => {
-      const date = new Date(att.date);
+const monthlyAttendance = attendance.filter(att => {
+      const date = new Date(att.date_c);
       return date >= monthStart && date <= monthEnd;
     });
 
     const stats = {
       totalDays: eachDayOfInterval({ start: monthStart, end: monthEnd }).length,
-      present: monthlyAttendance.filter(att => att.status === "Present").length,
-      absent: monthlyAttendance.filter(att => att.status === "Absent").length,
-      late: monthlyAttendance.filter(att => att.status === "Late").length,
-      halfDay: monthlyAttendance.filter(att => att.status === "Half Day").length
+present: monthlyAttendance.filter(att => att.status_c === "Present").length,
+      absent: monthlyAttendance.filter(att => att.status_c === "Absent").length,
+      late: monthlyAttendance.filter(att => att.status_c === "Late").length,
+      halfDay: monthlyAttendance.filter(att => att.status_c === "Half Day").length
     };
 
     return stats;
@@ -71,9 +71,9 @@ const Attendance = () => {
     const employeeAttendance = {};
     
     employees.forEach(emp => {
-      employeeAttendance[emp.Id] = {
+employeeAttendance[emp.Id] = {
         employee: emp,
-        records: attendance.filter(att => att.employeeId === emp.Id.toString())
+        records: attendance.filter(att => att.employee_id_c?.Id === emp.Id)
       };
     });
 
@@ -137,7 +137,7 @@ const Attendance = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-secondary-600">Present</p>
                       <p className="text-2xl font-bold text-green-600">
-                        {todayAttendance.filter(att => att.status === "Present").length}
+{todayAttendance.filter(att => att.status_c === "Present").length}
                       </p>
                     </div>
                   </div>
@@ -151,7 +151,7 @@ const Attendance = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-secondary-600">Late</p>
                       <p className="text-2xl font-bold text-yellow-600">
-                        {todayAttendance.filter(att => att.status === "Late").length}
+{todayAttendance.filter(att => att.status_c === "Late").length}
                       </p>
                     </div>
                   </div>
@@ -165,7 +165,7 @@ const Attendance = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-secondary-600">Absent</p>
                       <p className="text-2xl font-bold text-red-600">
-                        {todayAttendance.filter(att => att.status === "Absent").length}
+{todayAttendance.filter(att => att.status_c === "Absent").length}
                       </p>
                     </div>
                   </div>
@@ -179,7 +179,7 @@ const Attendance = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-secondary-600">Half Day</p>
                       <p className="text-2xl font-bold text-blue-600">
-                        {todayAttendance.filter(att => att.status === "Half Day").length}
+{todayAttendance.filter(att => att.status_c === "Half Day").length}
                       </p>
                     </div>
                   </div>
@@ -205,29 +205,29 @@ const Attendance = () => {
                   ) : (
                     <div className="space-y-4">
                       {todayAttendance.map((record) => {
-                        const employee = employees.find(emp => emp.Id.toString() === record.employeeId);
+const employee = employees.find(emp => emp.Id === record.employee_id_c?.Id);
                         if (!employee) return null;
 
                         return (
                           <div key={record.Id} className="flex items-center justify-between p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors">
                             <div className="flex items-center space-x-4">
                               <Avatar
-                                src={employee.photoUrl}
-                                name={`${employee.firstName} ${employee.lastName}`}
+src={employee?.photo_url_c}
+                                name={employee ? `${employee.first_name_c} ${employee.last_name_c}` : record.employee_id_c?.Name || 'Unknown'}
                               />
                               <div>
-                                <p className="font-medium text-secondary-900">
-                                  {employee.firstName} {employee.lastName}
+<p className="font-medium text-secondary-900">
+                                  {employee ? `${employee.first_name_c} ${employee.last_name_c}` : record.employee_id_c?.Name || 'Unknown Employee'}
                                 </p>
-                                <p className="text-sm text-secondary-600">{employee.role}</p>
+                                <p className="text-sm text-secondary-600">{employee?.role_c || ''}</p>
                               </div>
                             </div>
                             
                             <div className="flex items-center space-x-4">
                               <div className="text-right">
-                                {record.checkIn && (
+{record.check_in_c && (
                                   <p className="text-sm text-secondary-900">
-                                    In: {format(new Date(record.checkIn), "HH:mm")}
+                                    In: {format(new Date(record.check_in_c), "HH:mm")}
                                   </p>
                                 )}
                                 {record.checkOut && (
@@ -236,7 +236,7 @@ const Attendance = () => {
                                   </p>
                                 )}
                               </div>
-                              <StatusBadge status={record.status} type="attendance" />
+<StatusBadge status={record.status_c} type="attendance" />
                             </div>
                           </div>
                         );
@@ -310,9 +310,9 @@ const Attendance = () => {
                 </div>
                 <div className="p-6">
                   <div className="space-y-4">
-                    {Object.values(attendanceByEmployee).map(({ employee, records }) => {
+{Object.values(attendanceByEmployee).map(({ employee, records }) => {
                       const monthlyRecords = records.filter(record => {
-                        const date = new Date(record.date);
+                        const date = new Date(record.date_c);
                         return date >= startOfMonth(selectedDate) && date <= endOfMonth(selectedDate);
                       });
 
@@ -325,14 +325,14 @@ const Attendance = () => {
                         <div key={employee.Id} className="flex items-center justify-between p-4 border border-secondary-200 rounded-lg">
                           <div className="flex items-center space-x-4">
                             <Avatar
-                              src={employee.photoUrl}
-                              name={`${employee.firstName} ${employee.lastName}`}
+src={employee.photo_url_c}
+                              name={`${employee.first_name_c} ${employee.last_name_c}`}
                             />
                             <div>
-                              <p className="font-medium text-secondary-900">
-                                {employee.firstName} {employee.lastName}
+<p className="font-medium text-secondary-900">
+                                {employee.first_name_c} {employee.last_name_c}
                               </p>
-                              <p className="text-sm text-secondary-600">{employee.role}</p>
+                              <p className="text-sm text-secondary-600">{employee.role_c}</p>
                             </div>
                           </div>
                           

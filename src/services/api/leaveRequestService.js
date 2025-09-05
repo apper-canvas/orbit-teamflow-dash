@@ -1,91 +1,340 @@
-import leaveRequestsData from "@/services/mockData/leaveRequests.json";
-
-let leaveRequests = [...leaveRequestsData];
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 export const leaveRequestService = {
   async getAll() {
-    await delay(300);
-    return [...leaveRequests];
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "employee_id_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "end_date_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "reason_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "approved_by_c"}},
+          {"field": {"Name": "request_date_c"}}
+        ],
+        orderBy: [{"fieldName": "request_date_c", "sorttype": "DESC"}]
+      };
+
+      const response = await apperClient.fetchRecords('leave_request_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching leave requests:", error);
+      return [];
+    }
   },
 
   async getById(id) {
-    await delay(200);
-    const request = leaveRequests.find(req => req.Id === parseInt(id));
-    if (!request) {
-      throw new Error(`Leave request with ID ${id} not found`);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "employee_id_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "end_date_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "reason_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "approved_by_c"}},
+          {"field": {"Name": "request_date_c"}}
+        ]
+      };
+
+      const response = await apperClient.getRecordById('leave_request_c', parseInt(id), params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching leave request ${id}:`, error);
+      return null;
     }
-    return { ...request };
   },
 
   async getByEmployeeId(employeeId) {
-    await delay(200);
-    return leaveRequests.filter(req => req.employeeId === employeeId.toString());
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "employee_id_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "end_date_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "reason_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "approved_by_c"}},
+          {"field": {"Name": "request_date_c"}}
+        ],
+        where: [{"FieldName": "employee_id_c", "Operator": "EqualTo", "Values": [parseInt(employeeId)]}],
+        orderBy: [{"fieldName": "request_date_c", "sorttype": "DESC"}]
+      };
+
+      const response = await apperClient.fetchRecords('leave_request_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching employee leave requests:", error);
+      return [];
+    }
   },
 
   async getByStatus(status) {
-    await delay(200);
-    if (!status) return [...leaveRequests];
-    return leaveRequests.filter(req => req.status === status);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "employee_id_c"}},
+          {"field": {"Name": "start_date_c"}},
+          {"field": {"Name": "end_date_c"}},
+          {"field": {"Name": "type_c"}},
+          {"field": {"Name": "reason_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "approved_by_c"}},
+          {"field": {"Name": "request_date_c"}}
+        ],
+        orderBy: [{"fieldName": "request_date_c", "sorttype": "DESC"}]
+      };
+
+      if (status) {
+        params.where = [{"FieldName": "status_c", "Operator": "EqualTo", "Values": [status]}];
+      }
+
+      const response = await apperClient.fetchRecords('leave_request_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching leave requests by status:", error);
+      return [];
+    }
   },
 
   async create(leaveRequestData) {
-    await delay(500);
-    const maxId = Math.max(...leaveRequests.map(req => req.Id), 0);
-    const newRequest = {
-      ...leaveRequestData,
-      Id: maxId + 1,
-      requestDate: new Date().toISOString(),
-      status: "Pending"
-    };
-    leaveRequests.push(newRequest);
-    return { ...newRequest };
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const payload = {
+        records: [{
+          Name: leaveRequestData.Name || `Leave Request ${new Date().getTime()}`,
+          employee_id_c: parseInt(leaveRequestData.employee_id_c),
+          start_date_c: leaveRequestData.start_date_c,
+          end_date_c: leaveRequestData.end_date_c,
+          type_c: leaveRequestData.type_c,
+          reason_c: leaveRequestData.reason_c,
+          status_c: leaveRequestData.status_c || "Pending",
+          approved_by_c: leaveRequestData.approved_by_c || "",
+          request_date_c: leaveRequestData.request_date_c || new Date().toISOString()
+        }]
+      };
+
+      const response = await apperClient.createRecord('leave_request_c', payload);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results && response.results.length > 0) {
+        const successful = response.results.filter(r => r.success);
+        if (successful.length > 0) {
+          return successful[0].data;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error creating leave request:", error);
+      return null;
+    }
   },
 
   async update(id, leaveRequestData) {
-    await delay(400);
-    const index = leaveRequests.findIndex(req => req.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Leave request with ID ${id} not found`);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const payload = {
+        records: [{
+          Id: parseInt(id),
+          employee_id_c: parseInt(leaveRequestData.employee_id_c),
+          start_date_c: leaveRequestData.start_date_c,
+          end_date_c: leaveRequestData.end_date_c,
+          type_c: leaveRequestData.type_c,
+          reason_c: leaveRequestData.reason_c,
+          status_c: leaveRequestData.status_c,
+          approved_by_c: leaveRequestData.approved_by_c,
+          request_date_c: leaveRequestData.request_date_c
+        }]
+      };
+
+      const response = await apperClient.updateRecord('leave_request_c', payload);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results && response.results.length > 0) {
+        const successful = response.results.filter(r => r.success);
+        if (successful.length > 0) {
+          return successful[0].data;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error updating leave request:", error);
+      return null;
     }
-    const updatedRequest = {
-      ...leaveRequestData,
-      Id: parseInt(id)
-    };
-    leaveRequests[index] = updatedRequest;
-    return { ...updatedRequest };
   },
 
   async approve(id, approvedBy) {
-    await delay(400);
-    const index = leaveRequests.findIndex(req => req.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Leave request with ID ${id} not found`);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const payload = {
+        records: [{
+          Id: parseInt(id),
+          status_c: "Approved",
+          approved_by_c: approvedBy
+        }]
+      };
+
+      const response = await apperClient.updateRecord('leave_request_c', payload);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results && response.results.length > 0) {
+        const successful = response.results.filter(r => r.success);
+        if (successful.length > 0) {
+          return successful[0].data;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error approving leave request:", error);
+      return null;
     }
-    leaveRequests[index].status = "Approved";
-    leaveRequests[index].approvedBy = approvedBy;
-    return { ...leaveRequests[index] };
   },
 
   async reject(id, approvedBy) {
-    await delay(400);
-    const index = leaveRequests.findIndex(req => req.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Leave request with ID ${id} not found`);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const payload = {
+        records: [{
+          Id: parseInt(id),
+          status_c: "Rejected",
+          approved_by_c: approvedBy
+        }]
+      };
+
+      const response = await apperClient.updateRecord('leave_request_c', payload);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results && response.results.length > 0) {
+        const successful = response.results.filter(r => r.success);
+        if (successful.length > 0) {
+          return successful[0].data;
+        }
+      }
+
+      return null;
+    } catch (error) {
+      console.error("Error rejecting leave request:", error);
+      return null;
     }
-    leaveRequests[index].status = "Rejected";
-    leaveRequests[index].approvedBy = approvedBy;
-    return { ...leaveRequests[index] };
   },
 
   async delete(id) {
-    await delay(300);
-    const index = leaveRequests.findIndex(req => req.Id === parseInt(id));
-    if (index === -1) {
-      throw new Error(`Leave request with ID ${id} not found`);
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await apperClient.deleteRecord('leave_request_c', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error("Error deleting leave request:", error);
+      return false;
     }
-    const deletedRequest = leaveRequests.splice(index, 1)[0];
-    return { ...deletedRequest };
   }
+};
 };

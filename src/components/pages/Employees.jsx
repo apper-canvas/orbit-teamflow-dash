@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import { toast } from "react-toastify";
+import { employeeService } from "@/services/api/employeeService";
 import ApperIcon from "@/components/ApperIcon";
-import Button from "@/components/atoms/Button";
-import Header from "@/components/organisms/Header";
 import EmployeeCard from "@/components/organisms/EmployeeCard";
+import Header from "@/components/organisms/Header";
 import EmployeeModal from "@/components/organisms/EmployeeModal";
 import FilterDropdown from "@/components/molecules/FilterDropdown";
-import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import { employeeService } from "@/services/api/employeeService";
+import Loading from "@/components/ui/Loading";
+import Button from "@/components/atoms/Button";
+import employeeMetadata from "@/metadata/tables/employee_c.json";
+import departmentMetadata from "@/metadata/tables/department_c.json";
+import leaveRequestMetadata from "@/metadata/tables/leave_request_c.json";
+import attendanceMetadata from "@/metadata/tables/attendance_c.json";
 
 const Employees = () => {
   const { onMenuClick } = useOutletContext();
@@ -49,24 +53,28 @@ const Employees = () => {
     }
   };
 
-  const filterEmployees = () => {
+const filterEmployees = () => {
     let filtered = [...employees];
 
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       filtered = filtered.filter(emp => 
-        emp.firstName.toLowerCase().includes(query) ||
-        emp.lastName.toLowerCase().includes(query) ||
-        emp.email.toLowerCase().includes(query) ||
-        emp.role.toLowerCase().includes(query)
+        emp.first_name_c?.toLowerCase().includes(query) ||
+        emp.last_name_c?.toLowerCase().includes(query) ||
+        emp.email_c?.toLowerCase().includes(query) ||
+        emp.role_c?.toLowerCase().includes(query)
       );
     }
 
     if (departmentFilter) {
-      filtered = filtered.filter(emp => emp.department === departmentFilter);
+      filtered = filtered.filter(emp => emp.department_c === departmentFilter);
     }
 
     setFilteredEmployees(filtered);
+  };
+
+const handleSearch = (query) => {
+    setSearchQuery(query.toLowerCase());
   };
 
   const handleViewEmployee = (employee) => {
@@ -87,8 +95,8 @@ const Employees = () => {
     setModalOpen(true);
   };
 
-  const handleDeleteEmployee = async (employee) => {
-    if (window.confirm(`Are you sure you want to delete ${employee.firstName} ${employee.lastName}?`)) {
+const handleDeleteEmployee = async (employee) => {
+    if (window.confirm(`Are you sure you want to delete ${employee.first_name_c} ${employee.last_name_c}?`)) {
       try {
         await employeeService.delete(employee.Id);
         await loadEmployees();
@@ -114,8 +122,7 @@ const Employees = () => {
       toast.error(`Failed to ${modalMode === "add" ? "add" : "update"} employee`);
     }
   };
-
-  const departments = [...new Set(employees.map(emp => emp.department))].map(dept => ({
+const departments = [...new Set(employees.map(emp => emp.department_c).filter(Boolean))].map(dept => ({
     label: dept,
     value: dept
   }));

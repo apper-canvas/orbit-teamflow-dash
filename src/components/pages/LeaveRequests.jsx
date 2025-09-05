@@ -54,11 +54,11 @@ const LeaveRequests = () => {
     let filtered = [...leaveRequests];
 
     if (statusFilter) {
-      filtered = filtered.filter(req => req.status === statusFilter);
+filtered = filtered.filter(req => req.status_c === statusFilter);
     }
 
     // Sort by request date (newest first)
-    filtered.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+filtered.sort((a, b) => new Date(b.request_date_c) - new Date(a.request_date_c));
 
     setFilteredRequests(filtered);
   };
@@ -93,9 +93,9 @@ const LeaveRequests = () => {
 
   const getStatusCounts = () => {
     return {
-      pending: leaveRequests.filter(req => req.status === "Pending").length,
-      approved: leaveRequests.filter(req => req.status === "Approved").length,
-      rejected: leaveRequests.filter(req => req.status === "Rejected").length,
+pending: leaveRequests.filter(req => req.status_c === "Pending").length,
+      approved: leaveRequests.filter(req => req.status_c === "Approved").length,
+      rejected: leaveRequests.filter(req => req.status_c === "Rejected").length,
       total: leaveRequests.length
     };
   };
@@ -206,29 +206,29 @@ const LeaveRequests = () => {
             ) : (
               <div className="divide-y divide-secondary-200">
                 {filteredRequests.map((request) => {
-                  const employee = employees.find(emp => emp.Id.toString() === request.employeeId);
+const employee = employees.find(emp => emp.Id === request.employee_id_c?.Id);
                   if (!employee) return null;
 
-                  const duration = differenceInDays(new Date(request.endDate), new Date(request.startDate)) + 1;
+const duration = differenceInDays(new Date(request.end_date_c), new Date(request.start_date_c)) + 1;
 
                   return (
                     <div key={request.Id} className="p-6 hover:bg-secondary-50 transition-colors">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <Avatar
-                            src={employee.photoUrl}
-                            name={`${employee.firstName} ${employee.lastName}`}
+src={employee?.photo_url_c}
+                            name={employee ? `${employee.first_name_c} ${employee.last_name_c}` : request.employee_id_c?.Name || 'Unknown'}
                             size="lg"
                           />
                           <div>
-                            <h3 className="text-lg font-semibold text-secondary-900">
-                              {employee.firstName} {employee.lastName}
+<h3 className="text-lg font-semibold text-secondary-900">
+                              {employee ? `${employee.first_name_c} ${employee.last_name_c}` : request.employee_id_c?.Name || 'Unknown Employee'}
                             </h3>
-                            <p className="text-sm text-secondary-600">{employee.role} • {employee.department}</p>
+                            <p className="text-sm text-secondary-600">{employee?.role_c || ''} • {employee?.department_c || ''}</p>
                             <div className="flex items-center space-x-4 mt-2">
                               <div className="flex items-center text-sm text-secondary-600">
                                 <ApperIcon name="Calendar" className="w-4 h-4 mr-1" />
-                                {format(new Date(request.startDate), "MMM dd")} - {format(new Date(request.endDate), "MMM dd, yyyy")}
+{format(new Date(request.start_date_c), "MMM dd")} - {format(new Date(request.end_date_c), "MMM dd, yyyy")}
                               </div>
                               <div className="flex items-center text-sm text-secondary-600">
                                 <ApperIcon name="Clock" className="w-4 h-4 mr-1" />
@@ -236,25 +236,25 @@ const LeaveRequests = () => {
                               </div>
                               <div className="flex items-center text-sm text-secondary-600">
                                 <ApperIcon name="Tag" className="w-4 h-4 mr-1" />
-                                {request.type}
+{request.type_c}
                               </div>
                             </div>
                             {request.reason && (
-                              <p className="text-sm text-secondary-600 mt-2">
-                                <span className="font-medium">Reason:</span> {request.reason}
+<p className="text-sm text-secondary-600 mt-2">
+                                <span className="font-medium">Reason:</span> {request.reason_c}
                               </p>
                             )}
                             <p className="text-xs text-secondary-500 mt-1">
-                              Requested on {format(new Date(request.requestDate), "MMM dd, yyyy")}
-                              {request.approvedBy && ` • ${request.status} by ${request.approvedBy}`}
+Requested on {format(new Date(request.request_date_c), "MMM dd, yyyy")}
+                              {request.approved_by_c && ` • ${request.status_c} by ${request.approved_by_c}`}
                             </p>
                           </div>
                         </div>
 
                         <div className="flex items-center space-x-3">
-                          <StatusBadge status={request.status} type="leave" />
+<StatusBadge status={request.status_c} type="leave" />
                           
-                          {request.status === "Pending" && (
+{request.status_c === "Pending" && (
                             <div className="flex items-center space-x-2">
                               <Button
                                 variant="accent"

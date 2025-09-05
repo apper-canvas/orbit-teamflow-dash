@@ -7,7 +7,7 @@ import StatusBadge from "@/components/molecules/StatusBadge";
 import { format } from "date-fns";
 
 const EmployeeCard = ({ employee, onEdit, onView, onDelete, className }) => {
-  const fullName = `${employee.firstName} ${employee.lastName}`;
+const fullName = `${employee.first_name_c} ${employee.last_name_c}`;
 
   return (
     <div className={cn(
@@ -19,7 +19,7 @@ const EmployeeCard = ({ employee, onEdit, onView, onDelete, className }) => {
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
             <Avatar
-              src={employee.photoUrl}
+src={employee.photo_url_c}
               name={fullName}
               size="lg"
             />
@@ -29,22 +29,22 @@ const EmployeeCard = ({ employee, onEdit, onView, onDelete, className }) => {
               <p className="text-xs text-secondary-500">{employee.department}</p>
             </div>
           </div>
-          <StatusBadge status={employee.status} type="employee" />
+<StatusBadge status={employee.status_c} type="employee" />
         </div>
 
         {/* Contact info */}
         <div className="space-y-2 mb-4">
-          <div className="flex items-center text-sm text-secondary-600">
+<div className="flex items-center text-sm text-secondary-600">
             <ApperIcon name="Mail" className="w-4 h-4 mr-2 text-secondary-400" />
-            <span className="truncate">{employee.email}</span>
+            <span className="truncate">{employee.email_c}</span>
           </div>
           <div className="flex items-center text-sm text-secondary-600">
             <ApperIcon name="Phone" className="w-4 h-4 mr-2 text-secondary-400" />
-            <span>{employee.phone}</span>
+            <span>{employee.phone_c}</span>
           </div>
           <div className="flex items-center text-sm text-secondary-600">
             <ApperIcon name="Calendar" className="w-4 h-4 mr-2 text-secondary-400" />
-            <span>Joined {format(new Date(employee.hireDate), "MMM yyyy")}</span>
+            <span>Joined {format(new Date(employee.hire_date_c), "MMM yyyy")}</span>
           </div>
         </div>
 

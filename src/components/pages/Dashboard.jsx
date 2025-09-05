@@ -48,10 +48,10 @@ const Dashboard = () => {
       setLeaveRequests(leaveRequestsData);
 
       // Calculate stats
-      const activeEmployees = employeesData.filter(emp => emp.status === "Active").length;
-      const todayAttendance = attendanceData.filter(att => isToday(new Date(att.date)));
-      const presentToday = todayAttendance.filter(att => att.status === "Present" || att.status === "Late").length;
-      const pendingRequests = leaveRequestsData.filter(req => req.status === "Pending").length;
+const activeEmployees = employeesData.filter(emp => emp.status_c === "Active").length;
+      const todayAttendance = attendanceData.filter(att => isToday(new Date(att.date_c)));
+      const presentToday = todayAttendance.filter(att => att.status_c === "Present" || att.status_c === "Late").length;
+      const pendingRequests = leaveRequestsData.filter(req => req.status_c === "Pending").length;
 
       setStats({
         totalEmployees: employeesData.length,
@@ -221,29 +221,29 @@ const Dashboard = () => {
                     .filter(att => isToday(new Date(att.date)))
                     .slice(0, 5)
                     .map((att) => {
-                      const employee = employees.find(emp => emp.Id.toString() === att.employeeId);
+const employee = employees.find(emp => emp.Id === att.employee_id_c?.Id);
                       if (!employee) return null;
                       
                       return (
                         <div key={att.Id} className="flex items-center justify-between">
                           <div className="flex items-center space-x-3">
                             <Avatar
-                              src={employee.photoUrl}
-                              name={`${employee.firstName} ${employee.lastName}`}
+src={employee?.photo_url_c}
+                              name={employee ? `${employee.first_name_c} ${employee.last_name_c}` : att.employee_id_c?.Name || 'Unknown'}
                               size="sm"
                             />
                             <div>
-                              <p className="text-sm font-medium text-secondary-900">
-                                {employee.firstName} {employee.lastName}
+<p className="text-sm font-medium text-secondary-900">
+                                {employee ? `${employee.first_name_c} ${employee.last_name_c}` : att.employee_id_c?.Name || 'Unknown Employee'}
                               </p>
-                              <p className="text-xs text-secondary-500">{employee.role}</p>
+                              <p className="text-xs text-secondary-500">{employee?.role_c || ''}</p>
                             </div>
                           </div>
                           <div className="flex items-center space-x-2">
-                            <StatusBadge status={att.status} type="attendance" />
-                            {att.checkIn && (
+<StatusBadge status={att.status_c} type="attendance" />
+                            {att.check_in_c && (
                               <span className="text-xs text-secondary-500">
-                                {format(new Date(att.checkIn), "HH:mm")}
+                                {format(new Date(att.check_in_c), "HH:mm")}
                               </span>
                             )}
                           </div>
@@ -264,26 +264,26 @@ const Dashboard = () => {
               <div className="p-6">
                 <div className="space-y-4">
                   {leaveRequests
-                    .filter(req => req.status === "Pending")
+.filter(req => req.status_c === "Pending")
                     .slice(0, 3)
                     .map((request) => {
-                      const employee = employees.find(emp => emp.Id.toString() === request.employeeId);
+const employee = employees.find(emp => emp.Id === request.employee_id_c?.Id);
                       if (!employee) return null;
 
                       return (
                         <div key={request.Id} className="flex items-center justify-between p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                          <div className="flex items-center space-x-3">
+<div className="flex items-center space-x-3">
                             <Avatar
-                              src={employee.photoUrl}
+                              src={employee?.photo_url_c}
                               name={`${employee.firstName} ${employee.lastName}`}
                               size="sm"
-                            />
+/>
                             <div>
                               <p className="text-sm font-medium text-secondary-900">
-                                {employee.firstName} {employee.lastName}
+                                {employee ? `${employee.first_name_c} ${employee.last_name_c}` : request.employee_id_c?.Name || 'Unknown Employee'}
                               </p>
                               <p className="text-xs text-secondary-600">
-                                {request.type} • {format(new Date(request.startDate), "MMM dd")} - {format(new Date(request.endDate), "MMM dd")}
+                                {request.type_c} • {format(new Date(request.start_date_c), "MMM dd")} - {format(new Date(request.end_date_c), "MMM dd")}
                               </p>
                             </div>
                           </div>

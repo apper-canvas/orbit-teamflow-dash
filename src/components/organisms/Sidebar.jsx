@@ -1,7 +1,8 @@
-import React from "react";
-import { NavLink, useLocation } from "react-router-dom";
-import { cn } from "@/utils/cn";
-import ApperIcon from "@/components/ApperIcon";
+import React from 'react';
+import { NavLink, useLocation } from 'react-router-dom';
+import { cn } from '@/utils/cn';
+import ApperIcon from '@/components/ApperIcon';
+import LogoutButton from '@/components/molecules/LogoutButton';
 
 const Sidebar = ({ className, onClose }) => {
   const location = useLocation();
@@ -78,16 +79,19 @@ const Sidebar = ({ className, onClose }) => {
         ))}
       </nav>
 
-      {/* User Profile */}
+{/* User Profile */}
       <div className="border-t border-secondary-200 p-4">
-        <div className="flex items-center">
-          <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center">
-            <span className="text-sm font-medium text-white">HR</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center">
+              <span className="text-sm font-medium text-white">HR</span>
+            </div>
+            <div className="ml-3">
+              <p className="text-sm font-medium text-secondary-900">HR Admin</p>
+              <p className="text-xs text-secondary-500">Administrator</p>
+            </div>
           </div>
-          <div className="ml-3">
-            <p className="text-sm font-medium text-secondary-900">HR Admin</p>
-            <p className="text-xs text-secondary-500">Administrator</p>
-          </div>
+          <LogoutButton />
         </div>
       </div>
     </div>
